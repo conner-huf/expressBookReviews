@@ -1,38 +1,35 @@
 const axios = require('axios');
 
-async function registerUser(username, password) {
+async function getBooks() {
   try {
-    const response = await axios.post('http://localhost:5000/register', {
-      username,
-      password
-    });
+    const response = await axios.get('http://localhost:5000/books');
     console.log(response.data);
   } catch (error) {
     console.error(error);
   }
 }
 
-async function loginUser(username, password) {
+async function getBookByISBN(isbn) {
   try {
-    const response = await axios.post('http://localhost:5000/customer/login', {
-      username,
-      password
-    });
+    const response = await axios.get(`http://localhost:5000/books/${isbn}`);
     console.log(response.data);
   } catch (error) {
     console.error(error);
   }
 }
 
-async function addReview(isbn, review) {
+async function getBooksByAuthor(author) {
   try {
-    const response = await axios.put(`http://localhost:5000/customer/review/${isbn}`, {
-      review
-    }, {
-      headers: {
-        Authorization: `Bearer ${your_token}` // replace `your_token` with the actual token
-      }
-    });
+    const response = await axios.get(`http://localhost:5000/books/author/${author}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getBooksByTitle(title) {
+  try {
+    const response = await axios.get(`http://localhost:5000/books/title/${title}`);
     console.log(response.data);
   } catch (error) {
     console.error(error);
