@@ -10,10 +10,30 @@ app.use(express.json());
 
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
-app.use("/customer/auth/*", function auth(req,res,next){
-//Write the authenication mechanism here
+app.use("/customer/auth/*", function auth(req, res, next) {
+  // Check if the Authorization header is present
+  const authHeader = req.headers.authorization;
+  
+  // Check if the authHeader exists and is in the correct format
+  if (!authHeader) {
+    return res.status(401).json({ message: "Authorization token is required" });
+  }
+
+  // Extract the token from the Authorization header
+  const token = authHeader.split(' ')[1];
+  
+  // Verify the token
+  jwt.verify(token, "your_secret_key", (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
+  
+    // If token is valid, set the user information in the request object
+    req.user = decoded;
+    next(); // Proceed to the next middleware
+  });
 });
- 
+
 const PORT =5000;
 
 app.use("/customer", customer_routes);
